@@ -68,18 +68,15 @@
 
 #define NGX_CLUSTER_NODE "ngx_cluster_node"
 
-#define WEB_NGX_CLUSTER "hello world!"
+#define WEB_NGX_CLUSTER " "
 
 //--- define ---
-/* The hello world string. */
+/* The empty string. */
 static u_char ngx_web_cluster[] = WEB_NGX_CLUSTER;
-
-static ngx_http_output_header_filter_pt ngx_http_next_header_filter;
-static ngx_http_output_body_filter_pt ngx_http_next_body_filter;
 
 typedef struct {
     ngx_int_t status;
-
+   
 } ngx_http_cluster_ctx_t;
 
 typedef struct {
@@ -88,7 +85,8 @@ typedef struct {
 
     ngx_flag_t ngx_cluster_node;
 
+    u_char * confname; 
 } ngx_http_cluster_loc_conf_t; /* ----------  end of struct
-                                ngx_http_lb_loc_conf_t  ---------- */
+                                ngx_http_cluster_loc_conf_t  ---------- */
 #endif                         /* ----- #ifndef NGX_CLUSTER_INC  ----- */
 
