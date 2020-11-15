@@ -79,7 +79,7 @@ static ngx_command_t ngx_http_cluster_commands[] = {
     {ngx_string(NGX_CLUSTER_NODE), NGX_HTTP_LOC_CONF | NGX_CONF_NOARGS,
      ngx_http_cluster_node, 0, 0, NULL},
 
-    {ngx_string("cluster_api"),           /* directive */
+    {ngx_string(NGX_WEB_API),           /* directive */
      NGX_HTTP_LOC_CONF | NGX_CONF_NOARGS, /* location context and takes
                                              no arguments*/
      ngx_http_cluster_web,                /* configuration setup function */
@@ -151,7 +151,7 @@ static void *ngx_http_cluster_create_loc_conf(ngx_conf_t *cf) {
     conf = ngx_pcalloc(cf->pool, sizeof(ngx_http_cluster_loc_conf_t));
     if (conf == NULL) return NULL;
     conf->ngx_cluster_main = NGX_CONF_UNSET_UINT;
-    conf->ngx_cluster_node = NGX_CONF_UNSET_UINT;
+    /** conf->ngx_cluster_node = NGX_CONF_UNSET_UINT; */
     conf->ngx_cluster_branch = NGX_CONF_UNSET_PTR;
     conf->confname = NGX_CONF_UNSET_PTR;
     return (conf);
@@ -170,7 +170,7 @@ static char *ngx_http_cluster_merge_loc_conf(ngx_conf_t *cf, void *parent,
     ngx_http_cluster_loc_conf_t *conf = child;
 
     ngx_conf_merge_value(conf->ngx_cluster_main, prev->ngx_cluster_main, 0);
-    ngx_conf_merge_value(conf->ngx_cluster_node, prev->ngx_cluster_node, 0);
+    /** ngx_conf_merge_value(conf->ngx_cluster_node, prev->ngx_cluster_node, 0); */
     ngx_conf_merge_ptr_value(conf->ngx_cluster_branch, prev->ngx_cluster_branch,
                              NULL);
     ngx_conf_merge_ptr_value(conf->confname, prev->confname,
@@ -197,13 +197,14 @@ static ngx_int_t ngx_http_cluster_access_handler(ngx_http_request_t *r) {
     if (lccf->ngx_cluster_main == 0) {
         return NGX_DECLINED;
     }
+    if (lccf->ngx_cluster_branch == NULL) {
+        return NGX_DECLINED;
+    }
     if (r != r->main) {
         return NGX_DECLINED;
     }
 
-    if (lccf->ngx_cluster_branch == NULL) {
-        return NGX_DECLINED;
-    }
+    
     ctx = ngx_http_get_module_ctx(r, ngx_http_cluster_module);
 
     if (ctx) {
@@ -420,6 +421,8 @@ static ngx_int_t ngx_http_cluster_node_handler(ngx_http_request_t *r) {
         html_json = 1;
         resData = web_route_upload_conf(r, lccf);
     }
+  /**   else if (ngx_strcmp(uri.data, "/check_conf") == 0) { */
+    /** } */
 
     if (resData == NULL) {
         resData = ngx_pcalloc(r->pool, sizeof(ngx_str_t));
@@ -492,7 +495,7 @@ ngx_str_t *web_route_upload_conf(ngx_http_request_t *r,
         snprintf(confdir, cdlen, fmt, clen, lccf->confname, v,
                  (phv->value.data + 2));
     } else if (*phv->value.data == '/') {
-        NX_DEBUG("//");
+        /** NX_DEBUG("//"); */
         cdlen = nindex((char *)phv->value.data, '/');
         cdlen += 1;
         confdir = ngx_pcalloc(r->pool, cdlen);
@@ -517,16 +520,18 @@ ngx_str_t *web_route_upload_conf(ngx_http_request_t *r,
 
     dest.len = ngx_base64_decoded_length(chv->value.len);
     dest.data = ngx_pcalloc(r->pool, dest.len);
-    ngx_decode_base64(&dest, &chv->value);
-
+    ngx_int_t d = ngx_decode_base64(&dest, &chv->value);
+    if (d == NGX_ERROR) {
+        return NULL;
+    }
     config_create_file(file_name, (char *)dest.data, dest.len);
 
     ngx_pfree(r->pool, confdir);
     ngx_pfree(r->pool, file_name);
-    
-    res = ngx_pcalloc(r->pool,sizeof(ngx_str_t));
-    ngx_str_set(res,ok_out);
-    res->len+=1;
+
+    res = ngx_pcalloc(r->pool, sizeof(ngx_str_t));
+    ngx_str_set(res, ok_out);
+    res->len += 1;
 
     return res;
 } /* -----  end of function web_route_upload_conf  ----- */

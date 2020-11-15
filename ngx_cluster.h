@@ -63,6 +63,8 @@
 #endif
 
 //---    define ----
+
+#define NGX_WEB_API "cluster_api"
 #define NGX_CLUSTER_MAIN "ngx_cluster_main"
 #define NGX_CLUSTER_BRANCH "ngx_cluster_branch"
 
@@ -76,16 +78,16 @@ static u_char ngx_web_cluster[] = WEB_NGX_CLUSTER;
 
 typedef struct {
     ngx_int_t status;
-   
+
 } ngx_http_cluster_ctx_t;
 
 typedef struct {
     ngx_flag_t ngx_cluster_main;
     ngx_array_t *ngx_cluster_branch;
 
-    ngx_flag_t ngx_cluster_node;
+    // ngx_flag_t ngx_cluster_node;
 
-    u_char * confname; 
+    u_char *confname;
 } ngx_http_cluster_loc_conf_t; /* ----------  end of struct
                                 ngx_http_cluster_loc_conf_t  ---------- */
 #endif                         /* ----- #ifndef NGX_CLUSTER_INC  ----- */
