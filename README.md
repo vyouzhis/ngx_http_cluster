@@ -48,7 +48,6 @@
   - [编译安装(Installation)](#编译安装installation)
 - [配置(Usage)](#配置usage)
 - [集群(Cluster)](#集群cluster)
-- [|ngx_cluster_node | location | node 节点的指令  |](#ngx_cluster_node--location--node-节点的指令--)
 - [WebAPI](#webapi)
 - [License](#license)
 - [Contact](#contact)
@@ -127,7 +126,9 @@ gmake install
 | 指令        | 区域           | 说明  |
 | ------------- |:-------------:| -----:|
 |ngx_cluster_node | location | node 节点的指令  |
+
 ---
+
 >cluster 工作的思维图
 
 ```text
@@ -152,7 +153,7 @@ gmake install
 abc.conf      fastcgi.conf  mime.types    nginx.conf    proxy.conf    ssl/          vhosts/  
 ```
 
-> 参考配置 [nginx example conf](https://github.com/vyouzhis/ngx_http_cluster/tree/master/doc/main_nginx.conf)
+> 参考配置 [nginx example conf](https://github.com/vyouzhis/ngx_http_cluster/tree/master/doc/)
 
 ## WebAPI
 > restful api
