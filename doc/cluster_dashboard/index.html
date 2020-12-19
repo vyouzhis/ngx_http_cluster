@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Etomc2 Cluster Dashboard </title>
+	<link rel="stylesheet" href="css/style.css?v=2">
+	<link rel="stylesheet" type="text/css" href="css/text.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="css/layout.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="css/grid.css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="css/fluid.gs.css" media="screen" />
+	<!-- superfish menu -->
+	<link rel="stylesheet" type="text/css" href="css/superfish.css" media="screen" />
+	<link rel="stylesheet" href="css/jquery.treeview.css">
+	<!-- //jqueryUI css -->
+	<link type="text/css" href="css/custom-theme/jquery-ui-1.8.13.custom.css" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="js/main.css">
+	<script>
+
+		var cm;
+	</script>
+</head>
+
+<body>
+	<div class="container_16">
+		<header>
+			<div class="grid_16">
+				<h1 id="branding">
+					<a href="https://github.com/vyouzhis/ngx_http_cluster"> Cluster Dashboard</a>
+				</h1>
+			</div>
+
+
+			<div class="clear"></div>
+		</header>
+		<div id="main" role="main">
+			<div id="content">
+
+				<div class="grid_4">
+					<div class="box">
+						<h2>
+							Dashboard
+						</h2>
+						<div class="block" id="articles">
+							<div class="first article">
+								<div class="sixteen_column section">
+									<div class="sixteen column">
+										<div class="column_content">
+											<a href="#" class="image">
+												 <img src="https://avatars2.githubusercontent.com/u/5832145?s=400&u=e1923037c2831a3de8e1bb5b3305c1434b85981d&v=4"
+													width="60" height="60" alt="photo" /> 
+											</a>
+											<h3>
+												<a href="#">Cluster</a>
+											</h3>
+											<h4>Version</h4>
+											<p class="meta" id="version" name="version"></p>
+										</div>
+									</div>
+								</div>
+								<div class="sixteen_column section">
+
+
+								</div>
+								<div class="clear"></div>
+							</div>
+						</div>
+
+					</div>
+					<div class="box">
+						<h2>
+							配置列表
+						</h2>
+						<div id="tabs">
+							<ul>
+								<li><a href="#tabs-1">编辑</a></li>
+								<li><a href="#tabs-2">main对比</a></li>
+								<li><a href="#tabs-3">node对比</a></li>
+							</ul>
+							<div id="tabs-1">
+								<h5 id="page-sub-heading-left"><strong>Nginx config Set</strong></h5>
+
+								<div id="navigator">
+									<ul id="browser" class="filetree treeview-famfamfam">
+										<li>
+											<span class="folder">Main Nginx Config</span>
+											<ul id="main_config" name="main_config">
+
+											</ul>
+										</li>
+										<li>
+											<span class="folder">Node Nginx Config</span>
+											<ul  id="node_config" name="node_config">
+												
+
+											</ul>
+										</li>
+
+									</ul>
+								</div>
+							</div>
+							<div id="tabs-2">
+								<div class="grid_16">
+									<div class="grid_5">
+										<a href="javascript:void(0)" id="fresh_main" name="fresh_main"><span
+												class="ui-icon ui-icon-newwin"
+												style="float: left; margin-right: .3em;"></span>
+											<strong>Main更新</strong></a>
+									</div>
+								
+									<div class="grid_5">
+										<a href="javascript:void(0)" id="commit_main" name="commit_main"><span
+												class="ui-icon ui-icon-arrowthickstop-1-n"
+												style="float: left; margin-right: .3em;"></span>
+											<strong>提交</strong></a>
+									</div>
+								</div>
+
+								<div class="clear"></div>
+
+								<!-- <h5 >ddd</h5>
+								<p><a href="#"  class="ui-state-default ui-corner-some"><span class="ui-icon ui-icon-newwin"></span>Open Dialog</a></p> -->
+								<ul class="menu" id="main_list" name="main_list">
+
+								</ul>
+
+
+							</div>
+							<div id="tabs-3">
+								<div class="grid_16">
+									
+									<div class="grid_5">
+										<a href="javascript:void(0)" id="fresh_node" name="fresh_node"><span
+												class="ui-icon ui-icon-newwin"
+												style="float: left; margin-right: .3em;"></span>
+											<strong>Node更新</strong></a>
+									</div>
+									<div class="grid_5">
+										<a href="javascript:void(0)" id="commit_node" name="commit_node"><span
+												class="ui-icon ui-icon-arrowthickstop-1-n"
+												style="float: left; margin-right: .3em;"></span>
+											<strong>提交</strong></a>
+									</div>
+								</div>
+
+								<div class="clear"></div>
+
+								<!-- <h5 >ddd</h5>
+								<p><a href="#"  class="ui-state-default ui-corner-some"><span class="ui-icon ui-icon-newwin"></span>Open Dialog</a></p> -->
+								<ul class="menu" id="node_list" name="node_list">
+
+								</ul>
+
+
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<div class="grid_12">
+
+					<ul class="sf-menu" id="navigationTop">
+						<li>
+							<a href="#">文件</a>
+							<ul>
+								<li>
+									<a href="javascript:void(0);" onclick="new_server()">新增域名</a>
+
+								</li>
+								<li>
+									<a href="javascript:void(0);" onclick="upload_config()">保存配置</a>
+								</li>
+								<!-- <li>
+										<a href="javascript:void(0);" onclick="commit_conf()">应用配置</a>
+									</li> -->
+							</ul>
+						</li>
+						<li>
+							<a href="#">编辑</a>
+							<ul>
+								<li>
+									<a href="javascript:void(0);" onclick="format_code()">代码美化</a>
+								</li>
+								<!-- <li>
+									<a href="#">重命名域名</a>
+								</li> -->
+
+							</ul>
+						</li>
+						<!-- <li>
+							<a href="#">运行</a>
+							<ul>
+								<li>
+									<p><a href="#">restart</a></p>
+
+								</li>
+								<li>
+									<p><a href="#">reload</a></p>
+
+								</li>
+								<li>
+									<p><a href="#">sync</a></p>
+
+								</li>
+							</ul>
+						</li> -->
+					</ul>
+
+
+					<p class="meta" id="config_path" name="config_path">Nginx Config</p>
+					<div class="box">
+
+						<div id="ngx_edit" name="ngx_edit" class="hide">
+
+							<textarea id="ngx_conf" name="ngx_conf"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+
+			</div>
+			<footer>
+				<div class="grid_16" id="site_info">
+					<div class="box">
+						<p><a href="https://github.com/vyouzhis/ngx_http_cluster">ngx_http_cluster</a></p>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</footer>
+		</div>
+		<!-- ui-dialog -->
+		<div id="dialog" title="新增域名">
+			<div class="sixteen_column section">
+				<div class="eight column">
+					<div class="column_content">
+						<label>域名: </label>
+						<input type="text" name="domain" id="domain" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="dialog_push" title="提交文件">
+			<p id="dialg_push_text" name="dialg_push_text">
+			</p>
+		</div>
+	</div>
+	<script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.13.0/beautify.min.js"></script>
+	<script src="js/main.js"></script>
+	<script src="js/nginx.js"></script>
+	<script src="js/rest_cluster.js"></script>
+	<script type="text/javascript" src="js/jquery-ui-1.8.13.custom.min.js"></script>
+
+
+	<!-- superfish menu and needed js for menu -->
+	<script src="js/superfish.js"></script>
+	<script src="js/supersubs.js"></script>
+	<script src="js/hoverIntent.js"></script>
+	<script src="js/base64.js"></script>
+	<script src="js/jquery.treeview.js"></script>
+	<script src="js/ngx_api_data/api.js"></script>
+	<script>
+
+		$(function () {
+
+			get_version("/main");
+			$('#tabs').tabs();
+
+			$("#commit_main").click(function () {
+				commit_config("/main");
+			});
+			$("#commit_node").click(function () {
+				commit_config("/node");
+			});
+
+			$("#fresh_main").click(function () {
+				get_list("/main");
+			});
+			$("#fresh_node").click(function () {
+				get_list("/node");
+			});
+
+			init_tree("/main");
+			init_tree("/node");
+
+			// menu superfish
+			$('#navigationTop').superfish();
+			// Dialog			
+			$('#dialog').dialog({
+				autoOpen: false,
+				width: 600,
+				buttons: {
+					"Ok": function () {
+						var domain = $("#domain").val()
+						// console.log(domain);
+
+						add_new_servre(domain);
+					},
+					"Cancel": function () {
+						$(this).dialog("close");
+					}
+				}
+			});
+
+			$('#dialog_push').dialog({
+				autoOpen: false,
+				width: 600,
+				buttons: {
+					"Ok": function () {
+						var domain = $("#domain").val()
+						// console.log(domain);
+
+						// $.ajax({
+						// 	url: ng_url + "/main/new/server?domain=" + domain,
+						// 	complete: function (e) {
+						// 		if (e.status == 200) {
+
+						// 			var data = e.responseText;
+						// 			console.log(data)
+						// 			//var jdata = JSON.parse(data);
+						// 			$('#dialog').dialog("close");
+						// 		}
+						// 	}
+						// });
+					},
+					"Cancel": function () {
+						$(this).dialog("close");
+					}
+				}
+			});
+
+			$("#ngx_conf").keydown(function (e) {
+				if (e.keyCode === 9) { // tab was pressed
+					// get caret position/selection
+					var start = this.selectionStart;
+					var end = this.selectionEnd;
+
+					var $this = $(this);
+					var value = $this.val();
+
+					// set textarea value to: text before caret + tab + text after caret
+					$this.val(value.substring(0, start)
+						+ "\t"
+						+ value.substring(end));
+
+					// put caret at right position again (add one for the tab)
+					this.selectionStart = this.selectionEnd = start + 1;
+
+					// prevent the focus lose
+					e.preventDefault();
+				}
+			});
+
+		});
+	</script>
+</body>
+
+</html>

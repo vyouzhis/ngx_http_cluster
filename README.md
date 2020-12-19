@@ -25,7 +25,7 @@
   <p align="center">
     ngx_http_cluster is nginx module cluster main Control any nodes!
     <br />
-    ngx_http_cluster 是 nginx 集群管理配置 的模块插件
+    ngx_http_cluster 是 nginx 集群管理配置的模块插件
     <br />
     <a href="https://github.com/vyouzhis/ngx_http_cluster"><strong>Explore the docs »</strong></a>
     <br />
@@ -38,22 +38,20 @@
   </p>
 </p>
 
-
-
 <!-- TABLE OF CONTENTS -->
 ## 栏目(Table of Contents)
 
-* [关于该项目(About the Project)](#关于该项目about-the-project)
-  * [依赖关系(Built With)](#依赖关系built-with)
-* [起始(Getting Started)](#起始getting-started)
-  * [编译安装(Installation)](#编译安装installation)
-* [配置(Usage)](#配置usage)
-* [集群(Cluster)](#集群Cluster)
-* [WebAPI](#WebAPI)
-* [License](#license)
-* [联系(Contact)](#联系contact)
-
-
+- [栏目(Table of Contents)](#栏目table-of-contents)
+- [关于该项目(About the Project)](#关于该项目about-the-project)
+  - [依赖关系(Built With)](#依赖关系built-with)
+- [起始(Getting Started)](#起始getting-started)
+  - [编译安装(Installation)](#编译安装installation)
+- [配置(Usage)](#配置usage)
+- [集群(Cluster)](#集群cluster)
+- [|ngx_cluster_node | location | node 节点的指令  |](#ngx_cluster_node--location--node-节点的指令--)
+- [WebAPI](#webapi)
+- [License](#license)
+- [Contact](#contact)
 
 <!-- ABOUT THE PROJECT -->
 ## 关于该项目(About the Project)
@@ -63,14 +61,16 @@
 **拥有热更新参数(Runtime Configuration)**
 
 ### 依赖关系(Built With)
+
 需要用到的软件版本.
-* [nginx](http://nginx.org/en/download.html)
-* [ngx_http_cluster](https://github.com/vyouzhis/ngx_http_cluster)
 
-
+1. [nginx](http://nginx.org/en/download.html)
+2. [ngx_http_cluster](https://github.com/vyouzhis/ngx_http_cluster)
 
 <!-- GETTING STARTED -->
 ## 起始(Getting Started)
+
+![Dashboard](doc/dashboard.png)
 
 需要下载以下的文件.
 
@@ -78,24 +78,30 @@
 
 1. 在这儿选择 nginx 的版本 [http://nginx.org/download/nginx-1.18.0.tar.gz](http://nginx.org/en/download.html)
 2. 下载nginx
+
 ```sh
 wget http://nginx.org/download/nginx-1.18.0.tar.gz
 ```
-3. 解压
+
+1. 解压
+
 ```sh
 tar -zxvf nginx-1.18.0.tar.gz
 ```
-4. git clone ngx_http_cluster
+
+1. git clone ngx_http_cluster
+
 ```JS
 git clone https://github.com/vyouzhis/ngx_http_cluster.git
 ```
-5. 编译安装
+
+1. 编译安装
+
 ```sh
 ./configure --add-module=../ngx_http_cluster --with-http_ssl_module
 gmake
 gmake install
 ```
-
 
 <!-- USAGE EXAMPLES -->
 ## 配置(Usage)
@@ -104,8 +110,7 @@ gmake install
 
 | 指令        | 区域           | 说明  |
 | ------------- |:-------------:| -----:|
-| ngx_cluster_main      | http | 是否启用该模块:on or off |
-
+| ngx_cluster_filter      | server | 配置文件的读取，默认是读取 .conf .upstream .location |
 
 ## 集群(Cluster)
 
@@ -113,23 +118,23 @@ gmake install
 
 | 指令        | 区域           | 说明  |
 | ------------- |:-------------:| -----:|
-|cluster_api | location | web api  |
-| ngx_cluster_branch      | location | cluster baranch,setting in main server |
+|ngx_cluster_main | location | 主节点的指令  |
+|ngx_cluster_sync | location | 同步指令  |
+|ngx_cluster_branch | location | 同步到 node 节点指令  |
 
 > node cluster
 
 | 指令        | 区域           | 说明  |
 | ------------- |:-------------:| -----:|
-|ngx_cluster_node | location | node Control  |
+|ngx_cluster_node | location | node 节点的指令  |
+---
+>cluster 工作的思维图
 
-
->use nginx ngx_http_subrequest for cluster
-
-```
+```text
                         user web api Control nodes
 
                        +-------------------------+
-                       |    main nginx server    |
+        restful api--->|    main nginx server    |
                        +------------+------------+
                                     |
                 +-------------------+-----------------+
@@ -138,32 +143,150 @@ gmake install
    +------------+-----+   +---------+---------+    +--+---------------+
    |node1 nginx server|   | node2 nginx server|    |node3 nginx server|
    +------------------+   +-------------------+    +------------------+
+```
 
+>配置文件会保存在 conf/.config 目录下面
 
+```text
+[root@x1carbon conf]# ls -l .config/conf/
+abc.conf      fastcgi.conf  mime.types    nginx.conf    proxy.conf    ssl/          vhosts/  
 ```
 
 > 参考配置 [nginx example conf](https://github.com/vyouzhis/ngx_http_cluster/tree/master/doc/main_nginx.conf)
 
-
 ## WebAPI
-|     restful api   | curl test           | 说明  |
+> restful api
+
+|     restful api   | mothen           | 说明  |
 | ------------- |:-------------:| -----:|
-| update_conf | POST      |    在线更新配置,ngxconf:base64 config, path:nginx config file path  |
+| /get/list | POST      |   获取配置列表   |
 
->update_conf
+>/get/list
+
+```text
+// 获取主节点的配置列表
+POST http://localhost:1234/main/get/list HTTP/1.1
+
+//获取 node 节点配置列表
+POST http://localhost:1234/node/get/list HTTP/1.1
+
 ```
-curl --location --request GET 'http://127.0.0.1:1234/upload_conf' \
---header 'ngxconf: Agc2VydmVyIHsKICAgICAgICBsaXN0ZW4gICAgICAgODAwMDsKICAgICMgICAgbGlzdGVuICAgICAgIHNvbWVuYW1lOjgwODA7CiAgICAgICAgc2VydmVyX25hbWUgIHd3dy5iYWlkdS5jb207CgogICAgICAgIGxvY2F0aW9uIC8gewogICAgICAgICAgICAgZmFzdGNnaV9wYXNzICAgMTI3LjAuMC4xOjkwMDA7CiAgICAgICAgICAgIGZhc3RjZ2lfaW5kZXggIGluZGV4LnBocDsKICAgICAgICAgICAgZmFzdGNnaV9wYXJhbSAgU0NSSVBUX0ZJTEVOQU1FICAvdXNyL2xvY2FsL25naW54L2h0bWwkZmFzdGNnaV9zY3JpcHRfbmFtZTsKICAgICAgICAgICAgaW5jbHVkZSAgICAgICAgZmFzdGNnaV9wYXJhbXM7CiAgICAgICAgfQogICAgfQo=' \
---header 'path: ./vhost/www.163.com.conf'
 
+|     restful api   | mothen           | 说明  |
+| ------------- |:-------------:| -----:|
+| /get/config | POST      |   获取某个配置内容   |
+
+>/get/config
+
+```text
+// 获取主节点的配置内容
+POST http://localhost:1234/main/get/config HTTP/1.1
+Content-Type: "application/x-www-form-urlencoded"
+
+path=nginx.conf
+
+###
+
+//获取 node 节点配置内容
+POST http://localhost:1234/node/get/config HTTP/1.1
+Content-Type: "application/x-www-form-urlencoded"
+
+path=nginx.conf
+```
+
+|     restful api   | mothen           | 说明  |
+| ------------- |:-------------:| -----:|
+| /new/server | POST      |   添加一个新的server   |
+
+>/new/server
+
+```text
+//main  添加一个新的server
+POST http://localhost:1234/main/new/server HTTP/1.1
+Content-Type: "application/x-www-form-urlencoded"
+
+domain=www.abc.com
+
+###
+
+//node 添加一个新的server
+POST http://localhost:1234/node/new/server HTTP/1.1
+Content-Type: "application/x-www-form-urlencoded"
+
+domain=www.abc.com
+```
+
+|     restful api   | mothen           | 说明  |
+| ------------- |:-------------:| -----:|
+| /delete/server | POST      |  删除一个server   |
+
+>/delete/server
+
+```text
+//main  删除一个server
+POST http://localhost:1234/main/delete/server HTTP/1.1
+Content-Type: "application/x-www-form-urlencoded"
+
+domain=www.abc.com
+
+###
+
+//node 删除一个server
+POST http://localhost:1234/node/delete/server HTTP/1.1
+Content-Type: "application/x-www-form-urlencoded"
+
+domain=www.abc.com
+```
+
+|     restful api   | mothen           | 说明  |
+| ------------- |:-------------:| -----:|
+| /update/config | POST      |  更新一个配置   |
+
+>/update/config
+
+```text
+//main  更新一个配置
+
+POST http://localhost:1234/main/update/config HTTP/1.1
+Content-Type: "application/x-www-form-urlencoded"
+
+base64=base64_data&path=nginx.conf
+
+###
+
+//node 更新一个配置
+
+POST http://localhost:1234/node/update/config HTTP/1.1
+Content-Type: "application/x-www-form-urlencoded"
+
+base64=base64_data&path=nginx.conf
+```
+
+|     restful api   | mothen           | 说明  |
+| ------------- |:-------------:| -----:|
+| /commit/config | POST      |  commit一个配置   |
+
+>/commit/config
+
+```text
+//main  commit 配置
+
+
+POST http://localhost:1234/main/commit/config HTTP/1.1
+Content-Type: "application/x-www-form-urlencoded"
+
+###
+
+//node commit 配置
+
+POST http://localhost:1234/node/commit/config HTTP/1.1
+Content-Type: "application/x-www-form-urlencoded"
 ```
 
 <!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
-
-
 
 <!-- CONTACT -->
 ## Contact
